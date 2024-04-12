@@ -10,9 +10,10 @@ if test $# -gt 0; then
     tar xzf certbot-${CERTBOT_VERSION}.tar.gz
     # Install each named DNS plugin.
     for plugin_name in "$@"; do
+	plugin_name=$(echo ${plugin_name} | sed -E "s/^(certbot\-)*/certbot-/")
         echo "installing ${plugin_name}"
-        cp -r certbot-${CERTBOT_VERSION}/certbot-${plugin_name} /opt/certbot/src/certbot-${plugin_name}
-        pip install --constraint /opt/certbot/docker_constraints.txt --no-cache-dir /opt/certbot/src/certbot-${plugin_name}
+        cp -r certbot-${CERTBOT_VERSION}/${plugin_name} /opt/certbot/src/${plugin_name}
+        pip install --no-cache-dir /opt/certbot/src/${plugin_name}
     done
     rm -rf certbot-${CERTBOT_VERSION}.tar.gz certbot-${CERTBOT_VERSION}
 fi
