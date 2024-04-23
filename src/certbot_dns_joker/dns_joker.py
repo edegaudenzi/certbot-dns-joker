@@ -115,11 +115,15 @@ class _JokerClient(object):
         #  - an array of strings if the acme record is duplicated
         # In this way Joker can create N acme records having the same 'cert_domain'
         # instead of replacing each other.
-        if record_name in arr_record_names:
+        if len(record_content) == 0:
+                    arr_record_names[record_name] = ''
+
+        elif record_name in arr_record_names:
             if isinstance(arr_record_names[record_name], str):
                 arr_record_names[record_name] = [arr_record_names[record_name], record_content]
             else:
                 arr_record_names[record_name].append(record_content)
+
         else:
             arr_record_names[record_name] = record_content
 
