@@ -7,6 +7,8 @@ from certbot import errors
 from certbot import interfaces
 from certbot.plugins import dns_common
 
+arr_record_names = dict()
+
 logger = logging.getLogger(__name__)
 
 JOKER_ENDPOINT = 'https://svc.joker.com/nic/replace'
@@ -105,6 +107,22 @@ class _JokerClient(object):
         if record_name.endswith(dotdomain):
             record_name = record_name[0:-len(dotdomain)]
 
+        # If there are two equal 'cert_domain' records:
+        # e.g. "domain.com" and "*.domain.com" both generate: "_acme-challenge.domain.com"
+        # then Joker replaces the first challenge with the second one, leading to a fail check.
+        # To solve this, cert_domains dict() exists to contain challenges:
+        #  - as string if the acme record is not duplicated
+        #  - an array of strings if the acme record is duplicated
+        # In this way Joker can create N acme records having the same 'cert_domain'
+        # instead of replacing each other.
+        if record_name in arr_record_names:
+            if isinstance(arr_record_names[record_name], str):
+                arr_record_names[record_name] = [arr_record_names[record_name], record_content]
+            else:
+                arr_record_names[record_name].append(record_content)
+        else:
+            arr_record_names[record_name] = record_content
+
         r = self.session.post(
             self.endpoint,
             data = {
@@ -113,7 +131,7 @@ class _JokerClient(object):
                 'zone': self.domain,
                 'label': record_name,
                 'type': 'TXT',
-                'value': record_content,
+                'value': arr_record_names[record_name],
                 'ttl': self.ttl,
             })
 
