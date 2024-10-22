@@ -1,6 +1,6 @@
 # -*- mode:dockerfile -*-
 
-ARG CERTBOT_VERSION=2.10.0
+ARG CERTBOT_VERSION=2.11.0
 
 # https://hub.docker.com/r/certbot/certbot
 # The certbot Dockerfile specifies 'ENTRYPOINT [ "certbot" ]'.
