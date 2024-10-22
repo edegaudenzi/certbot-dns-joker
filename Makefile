@@ -8,7 +8,7 @@ CERTBOT_DNS_JOKER_TGZ=certbot-dns-joker-$(VERSION).tar.gz
 CERTBOT_DNS_JOKER_WHL=certbot_dns_joker-$(VERSION)-py2.py3-none-any.whl
 CERTBOT_DNS_JOKER_RPM=python3-certbot-dns-joker-$(VERSION)-1.el9.noarch.rpm
 CERTBOT_DNS_JOKER_SPEC=python-certbot-dns-joker.spec
-DOCKER_OTHER_PLUGINS=dns-dnsmadeeasy
+DOCKER_OTHER_PLUGINS=dns-dnsmadeeasy dns-cloudflare
 
 all: dist
 
